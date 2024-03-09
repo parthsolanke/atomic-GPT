@@ -2,4 +2,4 @@
 
 ![atomicGPT](./assets/box.jpg)
 
-A simple implementation medium sized GPT⚡. It is a rewrite of nanoGPT by Andrej Karpathy🤠
+A simple implementation medium sized GPT⚡, a rewrite of nanoGPT by Andrej Karpathy🤠
