@@ -58,8 +58,30 @@ def estimate_loss():
 
 # bigram class
 class BigramLanguageModel(nn.Module):
+    """
+    Bigram Language Model class.
 
-    def __init__(self):
+    This class represents a bigram language model implemented as a PyTorch module.
+    It consists of token and positional embedding layers, followed by a linear layer
+    for predicting the next token in the sequence.
+
+    Args:
+        vocab_size (int): The size of the vocabulary.
+        num_embed (int): The dimensionality of the token and positional embeddings.
+        block_size (int): The maximum length of the input sequence.
+
+    Attributes:
+        token_embedding_table (nn.Embedding): The token embedding lookup table.
+        positional_embedding_table (nn.Embedding): The positional embedding lookup table.
+        linear (nn.Linear): The linear layer for predicting the next token.
+
+    Methods:
+        forward(idx, targets=None): Performs a forward pass of the model.
+        generate(idx, max_new_tokens): Generates new tokens based on the given input.
+
+    """
+
+    def __init__(self, vocab_size, num_embed, block_size):
         super().__init__()
         # each token directly reads off the logits for the next token from a lookup table
         self.token_embedding_table = nn.Embedding(vocab_size, num_embed)
@@ -67,6 +89,18 @@ class BigramLanguageModel(nn.Module):
         self.linear = nn.Linear(num_embed, vocab_size)
 
     def forward(self, idx, targets=None):
+        """
+        Performs a forward pass of the model.
+
+        Args:
+            idx (torch.Tensor): The input tensor of shape (B, T) containing the indices of the tokens.
+            targets (torch.Tensor, optional): The target tensor of shape (B, T) containing the indices of the target tokens.
+
+        Returns:
+            logits (torch.Tensor): The output tensor of shape (B, T, vocab_size) containing the logits for each token.
+            loss (torch.Tensor or None): The computed loss tensor if targets are provided, otherwise None.
+
+        """
         B, T = idx.shape
         
         # idx and targets are both (B,T) tensor of integers
@@ -86,6 +120,17 @@ class BigramLanguageModel(nn.Module):
         return logits, loss
 
     def generate(self, idx, max_new_tokens):
+        """
+        Generates new tokens based on the given input.
+
+        Args:
+            idx (torch.Tensor): The input tensor of shape (B, T) containing the indices of the tokens.
+            max_new_tokens (int): The maximum number of new tokens to generate.
+
+        Returns:
+            idx (torch.Tensor): The output tensor of shape (B, T+max_new_tokens) containing the generated tokens.
+
+        """
         # idx is (B, T) array of indices in the current context
         for _ in range(max_new_tokens):
             # get the predictions
